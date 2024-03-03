@@ -5,7 +5,8 @@ function App() {
         <div className="w-96 mx-auto">
           <h1 className="text-xl font-semibold text-center">Sign up</h1>
           <div className="bg-base-100 mt-3 p-4 rounded-sm">
-            User name
+            <div className="flex gap-0.5">
+
             <input
               type="text"
               placeholder="First name"
@@ -16,6 +17,7 @@ function App() {
               placeholder="Last name"
               className="input input-bordered w-full max-w-xs"
             />
+            </div>
             <input
               type="text"
               placeholder="Email"
