@@ -5,6 +5,7 @@ export default function extractReactHookFormErrors<T extends FieldValues>(
   errors: FieldErrors<T>,
 ): Record<string, string> {
   const keys = Object.keys(errors);
+
   const messages = Object.values(errors).map((e) => e!.message);
 
   const fields = keys.map((k) => {
