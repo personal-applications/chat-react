@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import { PASSWORD_REGEX } from "../constants";
 import { formatAjvErrors } from "../helpers/formatAjvErrors";
 
-type RegisterFormFields = {
+export type RegisterFormFields = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -28,7 +28,7 @@ const schema: JSONSchemaType<RegisterFormFields> = {
 };
 
 export type Prop = {
-  onSubmit: (data: RegisterFormFields) => void;
+  onSubmit: (data: RegisterFormFields) => Promise<void>;
 };
 
 export default function RegisterForm({ onSubmit }: Prop) {
@@ -36,6 +36,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<RegisterFormFields>({
     resolver: ajvResolver(schema, { formats: fullFormats }),
     reValidateMode: "onChange",
@@ -45,7 +46,13 @@ export default function RegisterForm({ onSubmit }: Prop) {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((d) => onSubmit(d))}
+      onSubmit={handleSubmit(async (d) => {
+        try {
+          await onSubmit(d);
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        }
+      })}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
       <div className="flex gap-x-6">
