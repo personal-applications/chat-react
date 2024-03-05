@@ -25,3 +25,28 @@ test("should format errors correctly", () => {
     password: "Value is too short.",
   });
 });
+
+test("should format pattern error correctly", () => {
+  const errors = {
+    username: {
+      type: "pattern",
+    },
+  };
+  const result = formatAjvErrors(errors);
+  expect(result).toStrictEqual({
+    username: "Invalid value.",
+  });
+});
+
+test("should format regex error correctly", () => {
+  const errors = {
+    username: {
+      type: "regex",
+    },
+  };
+  const result = formatAjvErrors(errors);
+  expect(result).toStrictEqual({
+    username: "Invalid value.",
+  });
+});
+
