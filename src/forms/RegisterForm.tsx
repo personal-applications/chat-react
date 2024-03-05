@@ -27,7 +27,11 @@ const schema: JSONSchemaType<RegisterFormFields> = {
   additionalProperties: false,
 };
 
-export default function RegisterForm() {
+export type Prop = {
+  onSubmit: (data: RegisterFormFields) => void;
+};
+
+export default function RegisterForm({ onSubmit }: Prop) {
   const {
     register,
     handleSubmit,
@@ -41,7 +45,7 @@ export default function RegisterForm() {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((d) => console.log(d))}
+      onSubmit={handleSubmit((d) => onSubmit(d))}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
       <div className="flex gap-x-6">
