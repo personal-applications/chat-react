@@ -34,13 +34,14 @@ export default function RegisterForm() {
     formState: { errors },
   } = useForm<RegisterFormFields>({
     resolver: ajvResolver(schema, { formats: fullFormats }),
+    reValidateMode: "onChange",
   });
   const formattedErrors = formatAjvErrors(errors);
 
   return (
     <form
-      // noValidate
-      onSubmit={handleSubmit(console.log)}
+      noValidate
+      onSubmit={handleSubmit((d) => console.log(d))}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
       <div className="flex gap-x-6">
