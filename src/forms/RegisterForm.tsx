@@ -7,7 +7,7 @@ import { PASSWORD_REGEX } from "../constants";
 import { formatAjvErrors } from "../helpers/formatAjvErrors";
 import { ServerError, isServerFromError } from "../services/error";
 import { If, Then } from "react-if";
-import PasswordInput from "../components/PasswordInput";
+
 
 export type RegisterFormFields = {
   email: string;
