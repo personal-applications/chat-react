@@ -90,12 +90,14 @@ export default function RegisterForm({ onSubmit }: Prop) {
         <Input
           type="text"
           placeholder="First name"
+          className="input input-bordered"
           error={formattedErrors.firstName}
           {...register("firstName")}
         />
         <Input
           type="text"
           placeholder="Last name"
+          className="input input-bordered"
           error={formattedErrors.lastName}
           {...register("lastName")}
         />

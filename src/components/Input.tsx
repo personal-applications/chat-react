@@ -6,10 +6,11 @@ import { twMerge } from "tailwind-merge";
 type Prop = Partial<UseFormRegisterReturn> &
   Pick<React.InputHTMLAttributes<HTMLInputElement>, "placeholder" | "type"> & {
     error?: string;
+    postIcon?: React.ReactElement;
   };
 
 const Input = forwardRef(function Input(
-  { error, type = "text", ...props }: Prop,
+  { error, type = "text", postIcon, ...props }: Prop,
   ref: React.Ref<HTMLInputElement>,
 ) {
   return (
@@ -21,6 +22,9 @@ const Input = forwardRef(function Input(
         )}
       >
         <input type={type} className="grow" {...props} ref={ref} />
+        <If condition={React.isValidElement(postIcon)}>
+          <Then>{postIcon}</Then>
+        </If>
       </label>
 
       <If condition={error}>
