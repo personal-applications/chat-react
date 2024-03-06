@@ -5,8 +5,10 @@ import { useForm } from "react-hook-form";
 import Input from "../components/Input";
 import { PASSWORD_REGEX } from "../constants";
 import { formatAjvErrors } from "../helpers/formatAjvErrors";
+import { ServerError, isServerFromError } from "../services/error";
+import { If, Then } from "react-if";
 
-type RegisterFormFields = {
+export type RegisterFormFields = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -28,7 +30,7 @@ const schema: JSONSchemaType<RegisterFormFields> = {
 };
 
 export type Prop = {
-  onSubmit: (data: RegisterFormFields) => void;
+  onSubmit: (data: RegisterFormFields) => Promise<void>;
 };
 
 export default function RegisterForm({ onSubmit }: Prop) {
@@ -36,18 +38,53 @@ export default function RegisterForm({ onSubmit }: Prop) {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<RegisterFormFields>({
     resolver: ajvResolver(schema, { formats: fullFormats }),
     reValidateMode: "onChange",
   });
   const formattedErrors = formatAjvErrors(errors);
 
+  const asyncOnSubmit = async (data: RegisterFormFields) => {
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      if (isServerFromError(error)) {
+        (error as ServerError).errors.forEach((e) => {
+          setError(e.field as keyof RegisterFormFields, { message: e.message });
+        });
+      } else {
+        setError("root", { message: "An unknown error occurred" });
+      }
+    }
+  };
+
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((d) => onSubmit(d))}
+      onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
+      <If condition={!!errors.root}>
+        <Then>
+          <div role="alert" className="alert alert-error">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{errors.root?.message}</span>
+          </div>
+        </Then>
+      </If>
       <div className="flex gap-x-6">
         <Input
           type="text"
