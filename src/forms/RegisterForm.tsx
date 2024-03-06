@@ -7,6 +7,7 @@ import { PASSWORD_REGEX } from "../constants";
 import { formatAjvErrors } from "../helpers/formatAjvErrors";
 import { ServerError, isServerFromError } from "../services/error";
 import { If, Then } from "react-if";
+import PasswordInput from "../components/PasswordInput";
 
 export type RegisterFormFields = {
   email: string;
@@ -89,14 +90,12 @@ export default function RegisterForm({ onSubmit }: Prop) {
         <Input
           type="text"
           placeholder="First name"
-          className="input input-bordered"
           error={formattedErrors.firstName}
           {...register("firstName")}
         />
         <Input
           type="text"
           placeholder="Last name"
-          className="input input-bordered"
           error={formattedErrors.lastName}
           {...register("lastName")}
         />
