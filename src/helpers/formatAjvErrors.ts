@@ -1,6 +1,6 @@
 import { FieldErrors, FieldValues } from "react-hook-form";
 
-export function formatAjvErrors<T extends FieldValues>(
+export function formatAjvErrors<T extends FieldValues | { message: string }>(
   errors: FieldErrors<T>,
 ): Record<keyof T, string> {
   if (!Object.keys(errors).length) {
@@ -9,7 +9,18 @@ export function formatAjvErrors<T extends FieldValues>(
 
   const result: Record<string, string> = {};
   const fields = Object.keys(errors);
-  const types = Object.values(errors).map((error) => error!.type) as string[];
+  const types = Object.values(errors).map((error) => error!.type) as Array<
+    string | undefined
+  >;
+  const message = Object.values(errors).map((error) => error!.message) as Array<
+    string | undefined
+  >;
+
+  message.forEach((msg, index) => {
+    if (typeof msg === "string") {
+      result[fields[index]] = msg;
+    }
+  });
 
   types.forEach((type, index) => {
     if (type === "required") {
