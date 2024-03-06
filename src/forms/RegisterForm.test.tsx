@@ -95,8 +95,44 @@ test("displays server error message when server returns field-specific error", a
   await userEvent.click(screen.getByText(/Sign up/));
 
   expect(handleSubmit).toHaveBeenCalled();
+  expect(screen.getByText("Email is already in use")).toBeInTheDocument();
+});
 
-  await waitFor(() => {
-    expect(screen.getByText("Email is already in use")).toBeInTheDocument();
-  });
+test("display unknown error message when something goes wrong", async () => {
+  const serverError = {
+    message: "Something goes wrong",
+  };
+  const handleSubmit = vi.fn().mockRejectedValue(serverError);
+  render(<RegisterForm onSubmit={handleSubmit} />);
+
+  const formData: RegisterFormFields = {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com",
+    password: "Aa123456!",
+    confirmPassword: "Aa123456!",
+  };
+
+  await userEvent.type(
+    screen.getByPlaceholderText("First name"),
+    formData.firstName,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Last name"),
+    formData.lastName,
+  );
+  await userEvent.type(screen.getByPlaceholderText("Email"), formData.email);
+  await userEvent.type(
+    screen.getByPlaceholderText("Password"),
+    formData.password,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Confirm password"),
+    formData.confirmPassword,
+  );
+
+  await userEvent.click(screen.getByText(/Sign up/));
+
+  expect(handleSubmit).toHaveBeenCalled();
+  expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
 });
