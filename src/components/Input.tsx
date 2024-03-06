@@ -1,27 +1,32 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 import { If, Then } from "react-if";
 import { twMerge } from "tailwind-merge";
 
-type Prop = React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> & {
-  error?: string;
-};
+type Prop = Partial<UseFormRegisterReturn> &
+  Pick<React.InputHTMLAttributes<HTMLInputElement>, "placeholder" | "type"> & {
+    error?: string;
+    postIcon?: React.ReactElement;
+  };
 
 const Input = forwardRef(function Input(
-  props: Prop,
+  { error, type = "text", postIcon, ...props }: Prop,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const { error, className } = props;
-  let cssClass = className;
-  if (error) {
-    cssClass = twMerge(cssClass, "input-error");
-  }
-
   return (
     <div className="flex w-full flex-col">
-      <input {...props} className={cssClass} ref={ref} />
+      <label
+        className={twMerge(
+          "input input-bordered flex items-center gap-2",
+          error && "input-error",
+        )}
+      >
+        <input type={type} className="grow" {...props} ref={ref} />
+        <If condition={React.isValidElement(postIcon)}>
+          <Then>{postIcon}</Then>
+        </If>
+      </label>
+
       <If condition={error}>
         <Then>
           <span className="pt-3 text-sm text-error">{error}</span>
