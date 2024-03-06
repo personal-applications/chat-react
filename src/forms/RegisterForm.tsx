@@ -8,7 +8,6 @@ import { formatAjvErrors } from "../helpers/formatAjvErrors";
 import { ServerError, isServerFromError } from "../services/error";
 import { If, Then } from "react-if";
 
-
 export type RegisterFormFields = {
   email: string;
   password: string;

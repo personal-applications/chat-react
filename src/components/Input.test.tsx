@@ -4,23 +4,41 @@ import Input from "./Input";
 import React from "react";
 
 test("renders correctly", () => {
-  render(<Input placeholder="Enter your name" />);
+  const tree = render(<Input placeholder="Enter your name" />);
 
-  expect(screen.getByPlaceholderText("Enter your name")).toBeInTheDocument();
+  expect(tree).toMatchSnapshot();
 });
 
-test("applies error class when error prop is provided", () => {
-  render(<Input placeholder="Enter your name" error="Invalid input" />);
-
-  expect(screen.getByPlaceholderText("Enter your name")).toHaveClass(
-    "input-error",
+test("displays postIcon correctly", () => {
+  const tree = render(
+    <Input
+      placeholder="Enter your name"
+      postIcon={
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          className="w-4 h-4 opacity-70"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      }
+    />,
   );
+
+  expect(tree).toMatchSnapshot();
 });
 
-test("displays error message when error prop is provided", () => {
-  render(<Input placeholder="Enter your name" error="Invalid input" />);
+test("displays error message correctly", () => {
+  const tree = render(
+    <Input placeholder="Enter your name" error="Invalid input" />,
+  );
 
-  expect(screen.getByText("Invalid input")).toBeInTheDocument();
+  expect(tree).toMatchSnapshot();
 });
 
 test("forwards ref correctly", () => {
