@@ -2,11 +2,12 @@ import { ajvResolver } from "@hookform/resolvers/ajv";
 import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
 import { useForm } from "react-hook-form";
+import { If, Then } from "react-if";
 import Input from "../components/Input";
+import PasswordInput from "../components/PasswordInput";
 import { PASSWORD_REGEX } from "../constants";
 import { formatAjvErrors } from "../helpers/formatAjvErrors";
 import { ServerError, isServerFromError } from "../services/error";
-import { If, Then } from "react-if";
 
 export type RegisterFormFields = {
   email: string;
@@ -89,14 +90,12 @@ export default function RegisterForm({ onSubmit }: Prop) {
         <Input
           type="text"
           placeholder="First name"
-          className="input input-bordered"
           error={formattedErrors.firstName}
           {...register("firstName")}
         />
         <Input
           type="text"
           placeholder="Last name"
-          className="input input-bordered"
           error={formattedErrors.lastName}
           {...register("lastName")}
         />
@@ -104,21 +103,16 @@ export default function RegisterForm({ onSubmit }: Prop) {
       <Input
         type="email"
         placeholder="Email"
-        className="input input-bordered w-full"
         error={formattedErrors.email}
         {...register("email")}
       />
-      <Input
-        type="password"
+      <PasswordInput
         placeholder="Password"
-        className="input input-bordered w-full"
         error={formattedErrors.password}
         {...register("password")}
       />
-      <Input
-        type="password"
+      <PasswordInput
         placeholder="Confirm password"
-        className="input input-bordered w-full"
         error={formattedErrors.confirmPassword}
         {...register("confirmPassword")}
       />

@@ -4,14 +4,9 @@ import { ServerError } from "../services/error";
 import RegisterForm, { RegisterFormFields } from "./RegisterForm";
 
 test("renders correctly", () => {
-  render(<RegisterForm onSubmit={vi.fn()} />);
+  const tree = render(<RegisterForm onSubmit={vi.fn()} />);
 
-  expect(screen.getByPlaceholderText("First name")).toBeInTheDocument();
-  expect(screen.getByPlaceholderText("Last name")).toBeInTheDocument();
-  expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-  expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
-  expect(screen.getByPlaceholderText("Confirm password")).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: /sign up/i })).toBeInTheDocument();
+  expect(tree).toMatchSnapshot();
 });
 
 test("displays validation errors when fields are left empty", async () => {
