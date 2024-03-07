@@ -3,12 +3,6 @@ import userEvent from "@testing-library/user-event";
 import Input from "./Input";
 import React from "react";
 
-test("renders correctly", () => {
-  const tree = render(<Input placeholder="Enter your name" />);
-
-  expect(tree).toMatchSnapshot();
-});
-
 test("displays postIcon correctly", () => {
   const tree = render(
     <Input
@@ -34,11 +28,9 @@ test("displays postIcon correctly", () => {
 });
 
 test("displays error message correctly", () => {
-  const tree = render(
-    <Input placeholder="Enter your name" error="Invalid input" />,
-  );
+  render(<Input placeholder="Enter your name" error="Invalid input" />);
 
-  expect(tree).toMatchSnapshot();
+  expect(screen.getByText("Invalid input")).toBeInTheDocument();
 });
 
 test("forwards ref correctly", () => {

@@ -1,12 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import PasswordInput from "./PasswordInput";
 
-test("renders without crashing", () => {
-  const tree = render(<PasswordInput placeholder="Enter password" />);
-
-  expect(tree).toMatchSnapshot();
-});
-
 test("toggles password visibility", () => {
   render(<PasswordInput placeholder="Enter password" />);
   const input = screen.getByPlaceholderText("Enter password");

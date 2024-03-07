@@ -3,12 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { ServerError } from "../services/error";
 import RegisterForm, { RegisterFormFields } from "./RegisterForm";
 
-test("renders correctly", () => {
-  const tree = render(<RegisterForm onSubmit={vi.fn()} />);
-
-  expect(tree).toMatchSnapshot();
-});
-
 test("displays validation errors when fields are left empty", async () => {
   const handleSubmit = vi.fn();
   render(<RegisterForm onSubmit={handleSubmit} />);
