@@ -3,14 +3,14 @@ import { UseFormRegisterReturn } from "react-hook-form";
 import { If, Then } from "react-if";
 import { twMerge } from "tailwind-merge";
 
-type Prop = Partial<UseFormRegisterReturn> &
+export type InputProps = Partial<UseFormRegisterReturn> &
   Pick<React.InputHTMLAttributes<HTMLInputElement>, "placeholder" | "type"> & {
     error?: string;
     postIcon?: React.ReactElement;
   };
 
 const Input = forwardRef(function Input(
-  { error, type = "text", postIcon, ...props }: Prop,
+  { error, type = "text", postIcon, ...props }: InputProps,
   ref: React.Ref<HTMLInputElement>,
 ) {
   return (
