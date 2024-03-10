@@ -54,9 +54,14 @@ export default function LogInForm({ onSubmit }: Prop) {
       await onSubmit(data);
     } catch (error) {
       if (isServerFromError(error)) {
-        (error as ServerError).errors.forEach((e) => {
-          setError(e.field as keyof LoginFormFields, { message: e.message });
-        });
+        const serverError = error as ServerError;
+        if (serverError.errors.length) {
+          serverError.errors.forEach((e) => {
+            setError(e.field as keyof LoginFormFields, { message: e.message });
+          });
+        } else {
+          setError("root", { message: serverError.message });
+        }
       } else {
         setError("root", { message: "An unknown error occurred" });
       }

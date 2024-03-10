@@ -3,7 +3,7 @@ import LogInForm, { LoginFormFields } from "../forms/LogInForm";
 import { postData } from "../services/fetcher";
 
 function LogInPage() {
-  const { trigger } = useSWRMutation("/api/auth/register", postData);
+  const { trigger } = useSWRMutation("/api/auth/login", postData);
 
   const onSubmit = async (data: LoginFormFields) => {
     await trigger(data);
