@@ -9,9 +9,19 @@ test("displays validation errors when fields are left empty", async () => {
 
   await userEvent.click(screen.getByText(/Sign up/));
 
-  expect(screen.getAllByText("Value is too short.")).toHaveLength(2);
-  expect(screen.getByText("Invalid email address.")).toBeInTheDocument();
-  expect(screen.getAllByText("Invalid value.")).toHaveLength(2);
+  expect(
+    screen.getByText("First name must be at least 2 characters long."),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText("Last name must be at least 2 characters long."),
+  ).toBeInTheDocument();
+  expect(screen.getByText("Invalid email format.")).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+    ),
+  ).toBeInTheDocument();
+  expect(screen.getByText("Passwords do not match.")).toBeInTheDocument();
 });
 
 test("submits form data", async () => {
