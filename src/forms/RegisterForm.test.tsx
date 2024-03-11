@@ -135,3 +135,94 @@ test("display unknown error message when something goes wrong", async () => {
   expect(handleSubmit).toHaveBeenCalled();
   expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
 });
+
+test("displays root error message on server message", async () => {
+  const serverError: ServerError = {
+    code: 500,
+    errors: [],
+    message: "Server error",
+    status: "error",
+  };
+
+  const handleSubmit = vi.fn().mockRejectedValue(serverError);
+  render(<RegisterForm onSubmit={handleSubmit} />);
+
+  const formData: RegisterFormFields = {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com",
+    password: "Aa123456!",
+    confirmPassword: "Aa123456!",
+  };
+
+  await userEvent.type(
+    screen.getByPlaceholderText("First name"),
+    formData.firstName,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Last name"),
+    formData.lastName,
+  );
+  await userEvent.type(screen.getByPlaceholderText("Email"), formData.email);
+  await userEvent.type(
+    screen.getByPlaceholderText("Password"),
+    formData.password,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Confirm password"),
+    formData.confirmPassword,
+  );
+
+  await userEvent.click(screen.getByText(/Sign up/));
+
+  expect(handleSubmit).toHaveBeenCalled();
+  expect(screen.getByText(serverError.message)).toBeInTheDocument();
+});
+
+test("displays root error message on server error", async () => {
+  const serverError: ServerError = {
+    code: 500,
+    errors: [
+      {
+        field: "confirmPassword",
+        message: "Passwords do not match",
+      },
+    ],
+    message: "Server error",
+    status: "error",
+  };
+
+  const handleSubmit = vi.fn().mockRejectedValue(serverError);
+  render(<RegisterForm onSubmit={handleSubmit} />);
+
+  const formData: RegisterFormFields = {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com",
+    password: "Aa123456!",
+    confirmPassword: "Aa123456!",
+  };
+
+  await userEvent.type(
+    screen.getByPlaceholderText("First name"),
+    formData.firstName,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Last name"),
+    formData.lastName,
+  );
+  await userEvent.type(screen.getByPlaceholderText("Email"), formData.email);
+  await userEvent.type(
+    screen.getByPlaceholderText("Password"),
+    formData.password,
+  );
+  await userEvent.type(
+    screen.getByPlaceholderText("Confirm password"),
+    formData.confirmPassword,
+  );
+
+  await userEvent.click(screen.getByText(/Sign up/));
+
+  expect(handleSubmit).toHaveBeenCalled();
+  expect(screen.getByText("Passwords do not match")).toBeInTheDocument();
+});

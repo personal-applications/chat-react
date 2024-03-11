@@ -1,7 +1,7 @@
-export async function postData<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+export async function postData<Data, Key extends string, ExtraArgs>(
+  url: Key,
+  { arg }: { arg: ExtraArgs },
+): Promise<Data> {
   try {
     const response = await fetch(url, {
       method: "POST",

@@ -1,10 +1,16 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 import LogInForm, { LoginFormFields } from "./LogInForm";
+import { ServerError } from "../services/error";
 
 const mockOnSubmit = vi.fn();
 
 const renderForm = () => {
-  render(<LogInForm onSubmit={mockOnSubmit} />);
+  render(
+    <BrowserRouter>
+      <LogInForm onSubmit={mockOnSubmit} />
+    </BrowserRouter>,
+  );
 };
 
 test("renders form inputs and submit button", () => {
@@ -77,5 +83,57 @@ test("displays error message for invalid password", async () => {
       "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
     );
     expect(passwordError).toBeInTheDocument();
+  });
+});
+
+test("displays error message on server error", async () => {
+  mockOnSubmit.mockRejectedValueOnce(new Error("Server error"));
+
+  renderForm();
+
+  const emailInput = screen.getByPlaceholderText("Email");
+  const passwordInput = screen.getByPlaceholderText("Password");
+  const submitButton = screen.getByRole("button", { name: "Log in" });
+
+  const formData: LoginFormFields = {
+    email: "test@example.com",
+    password: "Password123",
+  };
+
+  fireEvent.change(emailInput, { target: { value: formData.email } });
+  fireEvent.change(passwordInput, { target: { value: formData.password } });
+  fireEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
+  });
+});
+
+test("displays root error message on server error", async () => {
+  const serverError = {
+    code: 500,
+    errors: [],
+    message: "Server error",
+    status: "error",
+  };
+  mockOnSubmit.mockRejectedValueOnce(serverError);
+
+  renderForm();
+
+  const emailInput = screen.getByPlaceholderText("Email");
+  const passwordInput = screen.getByPlaceholderText("Password");
+  const submitButton = screen.getByRole("button", { name: "Log in" });
+
+  const formData: LoginFormFields = {
+    email: "test@example.com",
+    password: "Password123",
+  };
+
+  fireEvent.change(emailInput, { target: { value: formData.email } });
+  fireEvent.change(passwordInput, { target: { value: formData.password } });
+  fireEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(screen.getByText(serverError.message)).toBeInTheDocument();
   });
 });
