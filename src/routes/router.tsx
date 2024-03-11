@@ -1,11 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
 import LogInPage from "./LogInPage";
+import ForgotPasswordPage from "./ForgotPasswordPage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <LogInPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
   },
 ]);
 

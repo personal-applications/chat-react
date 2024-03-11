@@ -13,7 +13,8 @@ function LogInPage() {
     <>
       <div className="h-screen w-screen bg-neutral pt-40">
         <div className="w-[600px] mx-auto">
-          <h1 className="text-xl font-semibold text-center">ChatHub</h1>
+          <h1 className="text-3xl font-semibold text-center mb-5">ChatHub</h1>
+          <h1 className="text-bold text-center text-xl">Login</h1>
           <LogInForm onSubmit={onSubmit} />
         </div>
       </div>
