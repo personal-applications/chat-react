@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import LogInForm, { LoginFormFields } from "./LogInForm";
-import { ServerError } from "../services/error";
 
 const mockOnSubmit = vi.fn();
 
