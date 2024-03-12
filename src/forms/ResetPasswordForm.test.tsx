@@ -61,7 +61,7 @@ test("calls onSubmit with form data when passwords match", async () => {
 
   expect(mockOnSubmit).toHaveBeenCalledTimes(1);
   expect(mockOnSubmit).toHaveBeenCalledWith({
-    password: "Aa123456*",
+    newPassword: "Aa123456*",
     confirmPassword: "Aa123456*",
   } as ResetPasswordFields);
 });
