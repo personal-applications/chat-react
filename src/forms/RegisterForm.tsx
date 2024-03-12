@@ -57,6 +57,9 @@ export default function RegisterForm({ onSubmit }: Prop) {
   const asyncOnSubmit = async (data: RegisterFormFields) => {
     try {
       await onSubmit(data);
+      setError("root.serverResponse", {
+        message: "Success! You have been registered.",
+      });
     } catch (error) {
       if (isServerFromError(error)) {
         const serverError = error as ServerError;
@@ -67,10 +70,10 @@ export default function RegisterForm({ onSubmit }: Prop) {
             });
           });
         } else {
-          setError("root", { message: serverError.message });
+          setError("root.serverError", { message: serverError.message });
         }
       } else {
-        setError("root", { message: "An unknown error occurred" });
+        setError("root.serverError", { message: "An unknown error occurred." });
       }
     }
   };
@@ -81,7 +84,27 @@ export default function RegisterForm({ onSubmit }: Prop) {
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
-      <If condition={!!errors.root}>
+      <If condition={!!errors?.root?.serverResponse}>
+        <Then>
+          <div role="alert" className="alert alert-success">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{errors.root?.serverResponse?.message}</span>
+          </div>
+        </Then>
+      </If>
+      <If condition={!!errors.root?.serverError}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg
@@ -97,7 +120,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>{errors.root?.message}</span>
+            <span>{errors.root?.serverError?.message}</span>
           </div>
         </Then>
       </If>

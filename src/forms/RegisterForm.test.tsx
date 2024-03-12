@@ -25,7 +25,7 @@ test("displays validation errors when fields are left empty", async () => {
 });
 
 test("submits form data", async () => {
-  const handleSubmit = vi.fn();
+  const handleSubmit = vi.fn().mockResolvedValue(undefined);
   render(<RegisterForm onSubmit={handleSubmit} />);
 
   await userEvent.type(screen.getByPlaceholderText("First name"), "John");
@@ -48,6 +48,9 @@ test("submits form data", async () => {
     password: "Aa123456!",
     confirmPassword: "Aa123456!",
   });
+  expect(
+    screen.getByText("Success! You have been registered."),
+  ).toBeInTheDocument();
 });
 
 test("displays server error message when server returns field-specific error", async () => {
@@ -133,7 +136,7 @@ test("display unknown error message when something goes wrong", async () => {
   await userEvent.click(screen.getByText(/Sign up/));
 
   expect(handleSubmit).toHaveBeenCalled();
-  expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
+  expect(screen.getByText("An unknown error occurred.")).toBeInTheDocument();
 });
 
 test("displays root error message on server message", async () => {

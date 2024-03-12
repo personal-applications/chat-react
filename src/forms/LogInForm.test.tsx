@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import LogInForm, { LoginFormFields } from "./LogInForm";
 
@@ -36,13 +37,11 @@ test("submits form with valid data", async () => {
     password: "Password123",
   };
 
-  fireEvent.change(emailInput, { target: { value: formData.email } });
-  fireEvent.change(passwordInput, { target: { value: formData.password } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, formData.email);
+  await userEvent.type(passwordInput, formData.password);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(mockOnSubmit).toHaveBeenCalledWith(formData);
-  });
+  expect(mockOnSubmit).toHaveBeenCalledWith(formData);
 });
 
 test("displays error message for invalid email", async () => {
@@ -54,14 +53,12 @@ test("displays error message for invalid email", async () => {
 
   const invalidEmail = "invalid-email";
 
-  fireEvent.change(emailInput, { target: { value: invalidEmail } });
-  fireEvent.change(passwordInput, { target: { value: "Password123" } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, invalidEmail);
+  await userEvent.type(passwordInput, "Password123");
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    const emailError = screen.getByText("Invalid email format.");
-    expect(emailError).toBeInTheDocument();
-  });
+  const emailError = screen.getByText("Invalid email format.");
+  expect(emailError).toBeInTheDocument();
 });
 
 test("displays error message for invalid password", async () => {
@@ -73,16 +70,14 @@ test("displays error message for invalid password", async () => {
 
   const invalidPassword = "password";
 
-  fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-  fireEvent.change(passwordInput, { target: { value: invalidPassword } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, "test@example.com");
+  await userEvent.type(passwordInput, invalidPassword);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    const passwordError = screen.getByText(
-      "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-    );
-    expect(passwordError).toBeInTheDocument();
-  });
+  const passwordError = screen.getByText(
+    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+  );
+  expect(passwordError).toBeInTheDocument();
 });
 
 test("displays error message on server error", async () => {
@@ -99,13 +94,11 @@ test("displays error message on server error", async () => {
     password: "Password123",
   };
 
-  fireEvent.change(emailInput, { target: { value: formData.email } });
-  fireEvent.change(passwordInput, { target: { value: formData.password } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, formData.email);
+  await userEvent.type(passwordInput, formData.password);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
-  });
+  expect(screen.getByText("An unknown error occurred")).toBeInTheDocument();
 });
 
 test("displays root error message on server error", async () => {
@@ -128,11 +121,9 @@ test("displays root error message on server error", async () => {
     password: "Password123",
   };
 
-  fireEvent.change(emailInput, { target: { value: formData.email } });
-  fireEvent.change(passwordInput, { target: { value: formData.password } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, formData.email);
+  await userEvent.type(passwordInput, formData.password);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(screen.getByText(serverError.message)).toBeInTheDocument();
-  });
+  expect(screen.getByText(serverError.message)).toBeInTheDocument();
 });

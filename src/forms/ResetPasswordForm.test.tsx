@@ -1,6 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import ResetPasswordForm, { ResetPasswordFields } from "./ResetPasswordForm";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
+import ResetPasswordForm, { ResetPasswordFields } from "./ResetPasswordForm";
 
 const mockOnSubmit = vi.fn();
 
@@ -32,16 +33,14 @@ test("displays error message when passwords do not match", async () => {
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
   // Enter different passwords
-  fireEvent.change(passwordInput, { target: { value: "password1" } });
-  fireEvent.change(confirmPasswordInput, { target: { value: "password2" } });
+  await userEvent.type(passwordInput, "password1");
+  await userEvent.type(confirmPasswordInput, "password2");
 
   // Submit the form
-  fireEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    const errorMessage = screen.getByText("Passwords do not match.");
-    expect(errorMessage).toBeInTheDocument();
-  });
+  const errorMessage = screen.getByText("Passwords do not match.");
+  expect(errorMessage).toBeInTheDocument();
 
   expect(mockOnSubmit).not.toHaveBeenCalled();
 });
@@ -53,20 +52,18 @@ test("calls onSubmit with form data when passwords match", async () => {
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
-  // Enter matching passwords
-  fireEvent.change(passwordInput, { target: { value: "Aa123456*" } });
-  fireEvent.change(confirmPasswordInput, { target: { value: "Aa123456*" } });
+  // Enter different passwords
+  await userEvent.type(passwordInput, "Aa123456*");
+  await userEvent.type(confirmPasswordInput, "Aa123456*");
 
   // Submit the form
-  fireEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(mockOnSubmit).toHaveBeenCalledTimes(1);
-    expect(mockOnSubmit).toHaveBeenCalledWith({
-      password: "Aa123456*",
-      confirmPassword: "Aa123456*",
-    } as ResetPasswordFields);
-  });
+  expect(mockOnSubmit).toHaveBeenCalledTimes(1);
+  expect(mockOnSubmit).toHaveBeenCalledWith({
+    password: "Aa123456*",
+    confirmPassword: "Aa123456*",
+  } as ResetPasswordFields);
 });
 
 test("displays success message when form submission is successful", async () => {
@@ -78,17 +75,15 @@ test("displays success message when form submission is successful", async () => 
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
-  // Enter matching passwords
-  fireEvent.change(passwordInput, { target: { value: "Aa123456*" } });
-  fireEvent.change(confirmPasswordInput, { target: { value: "Aa123456*" } });
+  // Enter different passwords
+  await userEvent.type(passwordInput, "Aa123456*");
+  await userEvent.type(confirmPasswordInput, "Aa123456*");
 
   // Submit the form
-  fireEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    const successMessage = screen.getByText("Password reset successful.");
-    expect(successMessage).toBeInTheDocument();
-  });
+  const successMessage = screen.getByText("Password reset successful.");
+  expect(successMessage).toBeInTheDocument();
 });
 
 test("displays error message when form submission fails", async () => {
@@ -100,17 +95,15 @@ test("displays error message when form submission fails", async () => {
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
-  // Enter matching passwords
-  fireEvent.change(passwordInput, { target: { value: "Aa123456*" } });
-  fireEvent.change(confirmPasswordInput, { target: { value: "Aa123456*" } });
+  // Enter different passwords
+  await userEvent.type(passwordInput, "Aa123456*");
+  await userEvent.type(confirmPasswordInput, "Aa123456*");
 
   // Submit the form
-  fireEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    const errorMessage = screen.getByText("An unknown error occurred.");
-    expect(errorMessage).toBeInTheDocument();
-  });
+  const errorMessage = screen.getByText("An unknown error occurred.");
+  expect(errorMessage).toBeInTheDocument();
 });
 
 test("renders ResetPasswordForm correctly", () => {
