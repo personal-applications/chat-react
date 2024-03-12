@@ -68,7 +68,7 @@ export default function LogInForm({ onSubmit }: Prop) {
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
-      <If condition={!!errors.root}>
+      <If condition={!isSubmitting && !!errors.root}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg

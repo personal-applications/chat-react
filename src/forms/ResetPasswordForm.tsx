@@ -1,14 +1,15 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
 import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { If, Then } from "react-if";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import PasswordInput from "../components/PasswordInput";
 import { PASSWORD_REGEX } from "../constants";
+import { ServerError, isServerFromError } from "../services/error";
 
 export type ResetPasswordFields = {
-  password: string;
+  newPassword: string;
   confirmPassword: string;
   token?: string;
 };
@@ -16,11 +17,11 @@ export type ResetPasswordFields = {
 const schema: JSONSchemaType<ResetPasswordFields> = {
   type: "object",
   properties: {
-    password: { type: "string", pattern: PASSWORD_REGEX },
+    newPassword: { type: "string", pattern: PASSWORD_REGEX },
     confirmPassword: { type: "string", pattern: PASSWORD_REGEX },
     token: { type: "string", nullable: true },
   },
-  required: ["password", "confirmPassword"],
+  required: ["newPassword", "confirmPassword"],
   additionalProperties: false,
   errorMessage: {
     properties: {
@@ -36,6 +37,7 @@ export type Prop = {
 };
 
 export default function ResetPasswordForm({ onSubmit }: Prop) {
+  const [searchParams] = useSearchParams();
   const {
     register,
     handleSubmit,
@@ -51,10 +53,22 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
 
   const asyncOnSubmit = async (data: ResetPasswordFields) => {
     try {
+      data.token = searchParams.get("token") ?? undefined;
       const { message } = await onSubmit(data);
       setError("root.serverResponse", { message });
     } catch (error) {
-      setError("root.serverError", { message: "An unknown error occurred." });
+      if (isServerFromError(error)) {
+        const e = error as ServerError;
+        setError("root.serverError", {
+          message: e.message,
+        });
+
+        return;
+      }
+
+      setError("root.serverError", {
+        message: "An unknown error occurred.",
+      });
     }
   };
 
@@ -64,7 +78,7 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
-      <If condition={!!errors?.root?.serverResponse}>
+      <If condition={!isSubmitting && !!errors?.root?.serverResponse}>
         <Then>
           <div role="alert" className="alert alert-success">
             <svg
@@ -107,8 +121,8 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
 
       <PasswordInput
         placeholder="Password"
-        error={errors.password?.message}
-        {...register("password")}
+        error={errors.newPassword?.message}
+        {...register("newPassword")}
       />
 
       <PasswordInput
