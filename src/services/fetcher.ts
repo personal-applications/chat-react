@@ -11,12 +11,14 @@ export async function postData<Data, Key extends string, ExtraArgs>(
       body: JSON.stringify(arg),
     });
 
-    const responseData = await response.json();
     if (!response.ok) {
-      throw responseData;
+      throw await response.json();
     }
 
-    return responseData;
+    if (response.status === 204) {
+      return {} as Data;
+    }
+    return await response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;

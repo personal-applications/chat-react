@@ -39,7 +39,7 @@ export default function LogInForm({ onSubmit }: Prop) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<LoginFormFields>({
     resolver: ajvResolver(schema, {
@@ -68,7 +68,7 @@ export default function LogInForm({ onSubmit }: Prop) {
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
-      <If condition={!!errors.root}>
+      <If condition={!isSubmitting && !!errors.root}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg
@@ -105,7 +105,7 @@ export default function LogInForm({ onSubmit }: Prop) {
           Forgot password?
         </Link>
       </div>
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
         Log in
       </button>
     </form>

@@ -1,7 +1,8 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
-import ForgotPasswordForm from "./ForgotPasswordForm";
 import { ServerError } from "../services/error";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const mockOnSubmit = vi.fn();
 
@@ -26,12 +27,10 @@ test("displays error message for invalid email", async () => {
   const emailInput = screen.getByPlaceholderText("Email");
   const submitButton = screen.getByRole("button", { name: "Forgot" });
 
-  fireEvent.change(emailInput, { target: { value: "invalid-email" } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, "invalid-email");
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(screen.getByText("Invalid email format.")).toBeInTheDocument();
-  });
+  expect(screen.getByText("Invalid email format.")).toBeInTheDocument();
 });
 
 test("displays success message on successful submission", async () => {
@@ -42,12 +41,10 @@ test("displays success message on successful submission", async () => {
   const emailInput = screen.getByPlaceholderText("Email");
   const submitButton = screen.getByRole("button", { name: "Forgot" });
 
-  fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, "test@example.com");
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(screen.getByText("Password reset email sent")).toBeInTheDocument();
-  });
+  expect(screen.getByText("Password reset email sent")).toBeInTheDocument();
 });
 
 test("displays error message on server error", async () => {
@@ -64,10 +61,8 @@ test("displays error message on server error", async () => {
   const emailInput = screen.getByPlaceholderText("Email");
   const submitButton = screen.getByRole("button", { name: "Forgot" });
 
-  fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-  fireEvent.click(submitButton);
+  await userEvent.type(emailInput, "test@example.com");
+  await userEvent.click(submitButton);
 
-  await waitFor(() => {
-    expect(screen.getByText("An unknown error occurred.")).toBeInTheDocument();
-  });
+  expect(screen.getByText("An unknown error occurred.")).toBeInTheDocument();
 });

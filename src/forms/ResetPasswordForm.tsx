@@ -3,35 +3,28 @@ import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
 import { useForm } from "react-hook-form";
 import { If, Then } from "react-if";
-import Input from "../components/Input";
+import { Link, useSearchParams } from "react-router-dom";
 import PasswordInput from "../components/PasswordInput";
 import { PASSWORD_REGEX } from "../constants";
 import { ServerError, isServerFromError } from "../services/error";
 
-export type RegisterFormFields = {
-  email: string;
-  password: string;
+export type ResetPasswordFields = {
+  newPassword: string;
   confirmPassword: string;
-  firstName: string;
-  lastName: string;
+  token?: string;
 };
 
-const schema: JSONSchemaType<RegisterFormFields> = {
+const schema: JSONSchemaType<ResetPasswordFields> = {
   type: "object",
   properties: {
-    email: { type: "string", format: "email" },
-    password: { type: "string", pattern: PASSWORD_REGEX },
+    newPassword: { type: "string", pattern: PASSWORD_REGEX },
     confirmPassword: { type: "string", pattern: PASSWORD_REGEX },
-    firstName: { type: "string", minLength: 2 },
-    lastName: { type: "string", minLength: 2 },
+    token: { type: "string", nullable: true },
   },
-  required: ["email", "password", "confirmPassword"],
+  required: ["newPassword", "confirmPassword"],
   additionalProperties: false,
   errorMessage: {
     properties: {
-      firstName: "First name must be at least 2 characters long.",
-      lastName: "Last name must be at least 2 characters long.",
-      email: "Invalid email format.",
       password:
         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
       confirmPassword: "Passwords do not match.",
@@ -40,41 +33,42 @@ const schema: JSONSchemaType<RegisterFormFields> = {
 };
 
 export type Prop = {
-  onSubmit: (data: RegisterFormFields) => Promise<void>;
+  onSubmit: (data: ResetPasswordFields) => Promise<{ message: string }>;
 };
 
-export default function RegisterForm({ onSubmit }: Prop) {
+export default function ResetPasswordForm({ onSubmit }: Prop) {
+  const [searchParams] = useSearchParams();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<RegisterFormFields>({
-    resolver: ajvResolver(schema, { formats: fullFormats }),
+  } = useForm<ResetPasswordFields>({
+    resolver: ajvResolver(schema, {
+      formats: fullFormats,
+      removeAdditional: true,
+    }),
     reValidateMode: "onChange",
   });
 
-  const asyncOnSubmit = async (data: RegisterFormFields) => {
+  const asyncOnSubmit = async (data: ResetPasswordFields) => {
     try {
-      await onSubmit(data);
-      setError("root.serverResponse", {
-        message: "Success! You have been registered.",
-      });
+      data.token = searchParams.get("token") ?? undefined;
+      const { message } = await onSubmit(data);
+      setError("root.serverResponse", { message });
     } catch (error) {
       if (isServerFromError(error)) {
-        const serverError = error as ServerError;
-        if (serverError.errors.length) {
-          serverError.errors.forEach((e) => {
-            setError(e.field as keyof RegisterFormFields, {
-              message: e.message,
-            });
-          });
-        } else {
-          setError("root.serverError", { message: serverError.message });
-        }
-      } else {
-        setError("root.serverError", { message: "An unknown error occurred." });
+        const e = error as ServerError;
+        setError("root.serverError", {
+          message: e.message,
+        });
+
+        return;
       }
+
+      setError("root.serverError", {
+        message: "An unknown error occurred.",
+      });
     }
   };
 
@@ -104,7 +98,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
           </div>
         </Then>
       </If>
-      <If condition={!isSubmitting && !!errors.root?.serverError}>
+      <If condition={!!errors?.root?.serverError}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg
@@ -124,39 +118,24 @@ export default function RegisterForm({ onSubmit }: Prop) {
           </div>
         </Then>
       </If>
-      <div className="flex gap-x-6">
-        <Input
-          type="text"
-          placeholder="First name"
-          error={errors.firstName?.message}
-          {...register("firstName")}
-        />
-        <Input
-          type="text"
-          placeholder="Last name"
-          error={errors.lastName?.message}
-          {...register("lastName")}
-        />
-      </div>
-      <Input
-        type="email"
-        placeholder="Email"
-        error={errors.email?.message}
-        {...register("email")}
-      />
+
       <PasswordInput
         placeholder="Password"
-        error={errors.password?.message}
-        {...register("password")}
+        error={errors.newPassword?.message}
+        {...register("newPassword")}
       />
+
       <PasswordInput
-        placeholder="Confirm password"
+        placeholder="Confirm Password"
         error={errors.confirmPassword?.message}
         {...register("confirmPassword")}
       />
 
+      <Link to="/forgot-password" className="link link-primary link-hover">
+        Forgot password?
+      </Link>
       <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-        Sign up
+        Reset
       </button>
     </form>
   );

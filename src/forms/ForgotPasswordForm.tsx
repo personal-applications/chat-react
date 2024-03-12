@@ -57,7 +57,7 @@ export default function ForgotPasswordForm({ onSubmit }: Prop) {
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
     >
-      <If condition={!!errors?.root?.serverResponse}>
+      <If condition={!isSubmitting && !!errors?.root?.serverResponse}>
         <Then>
           <div role="alert" className="alert alert-success">
             <svg
@@ -77,7 +77,7 @@ export default function ForgotPasswordForm({ onSubmit }: Prop) {
           </div>
         </Then>
       </If>
-      <If condition={!!errors?.root?.serverError}>
+      <If condition={!isSubmitting && !!errors?.root?.serverError}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg
