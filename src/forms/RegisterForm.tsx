@@ -47,7 +47,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<RegisterFormFields>({
     resolver: ajvResolver(schema, { formats: fullFormats }),
@@ -155,7 +155,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
         {...register("confirmPassword")}
       />
 
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
         Sign up
       </button>
     </form>

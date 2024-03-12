@@ -39,7 +39,7 @@ export default function LogInForm({ onSubmit }: Prop) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<LoginFormFields>({
     resolver: ajvResolver(schema, {
@@ -105,7 +105,7 @@ export default function LogInForm({ onSubmit }: Prop) {
           Forgot password?
         </Link>
       </div>
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
         Log in
       </button>
     </form>
