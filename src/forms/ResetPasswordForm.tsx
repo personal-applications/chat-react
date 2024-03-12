@@ -1,7 +1,7 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
 import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { If, Then } from "react-if";
 import { Link, useSearchParams } from "react-router-dom";
 import PasswordInput from "../components/PasswordInput";
