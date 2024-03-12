@@ -1,18 +1,18 @@
 import useSWRMutation from "swr/mutation";
-import ForgotPasswordForm, {
-  ForgotPasswordFields,
-} from "../forms/ForgotPasswordForm";
+import ResetPasswordForm, {
+  ResetPasswordFields,
+} from "../forms/ResetPasswordForm";
 import { postData } from "../services/fetcher";
 
 function ForgotPasswordPage() {
   const { trigger } = useSWRMutation<
     { message: string },
     Error,
-    "/api/auth/forgot-password",
-    ForgotPasswordFields
-  >("/api/auth/forgot-password", postData);
+    "/api/auth/reset-password",
+    ResetPasswordFields
+  >("/api/auth/reset-password", postData);
 
-  const onSubmit = async (data: ForgotPasswordFields) => {
+  const onSubmit = async (data: ResetPasswordFields) => {
     const { message } = await trigger(data);
 
     return { message };
@@ -23,8 +23,8 @@ function ForgotPasswordPage() {
       <div className="h-screen w-screen bg-neutral pt-40">
         <div className="w-[600px] mx-auto">
           <h1 className="text-3xl font-semibold text-center mb-5">ChatHub</h1>
-          <h1 className="text-bold text-center text-xl">Forgot Password</h1>
-          <ForgotPasswordForm onSubmit={onSubmit} />
+          <h1 className="text-bold text-center text-xl"> Reset password </h1>
+          <ResetPasswordForm onSubmit={onSubmit} />
         </div>
       </div>
     </>
