@@ -37,7 +37,6 @@ export default function ForgotPasswordForm({ onSubmit }: Prop) {
   } = useForm<ForgotPasswordFields>({
     resolver: ajvResolver(schema, {
       formats: fullFormats,
-      removeAdditional: true,
     }),
     reValidateMode: "onChange",
   });

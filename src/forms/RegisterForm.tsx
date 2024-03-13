@@ -16,12 +16,12 @@ export type RegisterFormFields = {
   lastName: string;
 };
 
-const schema: JSONSchemaType<RegisterFormFields> = {
+const schema = {
   type: "object",
   properties: {
     email: { type: "string", format: "email" },
     password: { type: "string", pattern: PASSWORD_REGEX },
-    confirmPassword: { type: "string", pattern: PASSWORD_REGEX },
+    confirmPassword: { const: { $data: "1/password" } },
     firstName: { type: "string", minLength: 2 },
     lastName: { type: "string", minLength: 2 },
   },
@@ -37,7 +37,7 @@ const schema: JSONSchemaType<RegisterFormFields> = {
       confirmPassword: "Passwords do not match.",
     },
   },
-};
+} as unknown as JSONSchemaType<RegisterFormFields>;
 
 export type Prop = {
   onSubmit: (data: RegisterFormFields) => Promise<void>;
@@ -50,7 +50,7 @@ export default function RegisterForm({ onSubmit }: Prop) {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<RegisterFormFields>({
-    resolver: ajvResolver(schema, { formats: fullFormats }),
+    resolver: ajvResolver(schema, { formats: fullFormats, $data: true }),
     reValidateMode: "onChange",
   });
 

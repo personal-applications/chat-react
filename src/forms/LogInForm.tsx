@@ -44,7 +44,6 @@ export default function LogInForm({ onSubmit }: Prop) {
   } = useForm<LoginFormFields>({
     resolver: ajvResolver(schema, {
       formats: fullFormats,
-      removeAdditional: true,
     }),
     reValidateMode: "onChange",
   });
