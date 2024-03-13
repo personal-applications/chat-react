@@ -21,7 +21,11 @@ const schema = {
   properties: {
     email: { type: "string", format: "email" },
     password: { type: "string", pattern: PASSWORD_REGEX },
-    confirmPassword: { const: { $data: "1/password" } },
+    confirmPassword: {
+      type: "string",
+      minLength: 1,
+      const: { $data: "1/password" },
+    },
     firstName: { type: "string", minLength: 2 },
     lastName: { type: "string", minLength: 2 },
   },
