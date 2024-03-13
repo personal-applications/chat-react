@@ -14,23 +14,23 @@ export type ResetPasswordFields = {
   token?: string;
 };
 
-const schema: JSONSchemaType<ResetPasswordFields> = {
+const schema = {
   type: "object",
   properties: {
     newPassword: { type: "string", pattern: PASSWORD_REGEX },
-    confirmPassword: { type: "string", pattern: PASSWORD_REGEX },
+    confirmPassword: { const: { $data: "1/newPassword" } },
     token: { type: "string", nullable: true },
   },
   required: ["newPassword", "confirmPassword"],
   additionalProperties: false,
   errorMessage: {
     properties: {
-      password:
+      newPassword:
         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
       confirmPassword: "Passwords do not match.",
     },
   },
-};
+} as unknown as JSONSchemaType<ResetPasswordFields>;
 
 export type Prop = {
   onSubmit: (data: ResetPasswordFields) => Promise<{ message: string }>;
@@ -46,7 +46,7 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
   } = useForm<ResetPasswordFields>({
     resolver: ajvResolver(schema, {
       formats: fullFormats,
-      removeAdditional: true,
+      $data: true,
     }),
     reValidateMode: "onChange",
   });
