@@ -1,13 +1,22 @@
 import useSWRMutation from "swr/mutation";
 import LogInForm, { LoginFormFields } from "../forms/LogInForm";
 import { postData } from "../services/fetcher";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { JWT_KEY, saveToLocalStorage } from "../helpers/localStorage";
 
 function LogInPage() {
-  const { trigger } = useSWRMutation("/api/auth/login", postData);
+  const navigate = useNavigate();
+  const { trigger } = useSWRMutation<
+    { jwt: string },
+    Error,
+    "/api/auth/login",
+    LoginFormFields
+  >("/api/auth/login", postData);
 
   const onSubmit = async (data: LoginFormFields) => {
-    await trigger(data);
+    const { jwt } = await trigger(data);
+    saveToLocalStorage(JWT_KEY, jwt);
+    navigate("/");
   };
 
   return (
