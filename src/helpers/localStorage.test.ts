@@ -1,7 +1,7 @@
 import { saveToLocalStorage, getFromLocalStorage } from "./localStorage";
 
-describe("saveToLocalStorage", () => {
-  it("should save a value to local storage", () => {
+suite("saveToLocalStorage", () => {
+  test("should save a value to local storage", () => {
     const key = "testKey";
     const value = { name: "John", age: 30 };
 
@@ -12,8 +12,8 @@ describe("saveToLocalStorage", () => {
   });
 });
 
-describe("getFromLocalStorage", () => {
-  it("should return the stored value from local storage", () => {
+suite("getFromLocalStorage", () => {
+  test("should return the stored value from local storage", () => {
     const key = "testKey";
     const value = { name: "John", age: 30 };
 
