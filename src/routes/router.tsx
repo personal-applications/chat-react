@@ -1,30 +1,31 @@
 import { createBrowserRouter } from "react-router-dom";
+import createRouteGuard from "../helpers/createRouteGuard";
 import ForgotPasswordPage from "./ForgotPasswordPage";
+import HomePage from "./HomePage";
 import LogInPage from "./LogInPage";
 import RegisterPage from "./RegisterPage";
 import ResetPasswordPage from "./ResetPasswordPage";
-import HomePage from "./HomePage";
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <LogInPage />,
+    element: createRouteGuard(LogInPage, "loggedOut"),
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: createRouteGuard(RegisterPage, "loggedOut"),
   },
   {
     path: "/forgot-password",
-    element: <ForgotPasswordPage />,
+    element: createRouteGuard(ForgotPasswordPage, "loggedOut"),
   },
   {
     path: "/reset-password",
-    element: <ResetPasswordPage />,
+    element: createRouteGuard(ResetPasswordPage, "loggedOut"),
   },
   {
     path: "/",
-    element: <HomePage />,
+    element: createRouteGuard(HomePage, "loggedIn"),
   },
 ]);
 
