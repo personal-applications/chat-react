@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   JWT_KEY,
   deleteFromLocalStorage,
@@ -8,6 +8,7 @@ import {
 import { getData } from "../services/fetcher";
 
 export default function RootPage() {
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +24,12 @@ export default function RootPage() {
         });
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/login");
+    }
+  }, [location, navigate]);
 
   return (
     <>
