@@ -1,4 +1,8 @@
-import { saveToLocalStorage, getFromLocalStorage } from "./localStorage";
+import {
+  saveToLocalStorage,
+  getFromLocalStorage,
+  deleteFromLocalStorage,
+} from "./localStorage";
 
 suite("saveToLocalStorage", () => {
   test("should save a value to local storage", () => {
@@ -27,6 +31,20 @@ suite("getFromLocalStorage", () => {
     const key = "nonExistentKey";
 
     const retrievedValue = getFromLocalStorage(key);
+    expect(retrievedValue).toBeNull();
+  });
+});
+
+suite("deleteFromLocalStorage", () => {
+  test("should delete the value from local storage", () => {
+    const key = "testKey";
+    const value = { name: "John", age: 30 };
+
+    localStorage.setItem(key, JSON.stringify(value));
+
+    deleteFromLocalStorage(key);
+
+    const retrievedValue = localStorage.getItem(key);
     expect(retrievedValue).toBeNull();
   });
 });

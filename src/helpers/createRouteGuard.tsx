@@ -13,7 +13,7 @@ export default function createRouteGuard(
     return <Redirect to="/login" />;
   }
   if (jwt && condition === "loggedOut") {
-    return <Redirect to="/" />;
+    return <Redirect to="/home" />;
   }
   return <C />;
 }

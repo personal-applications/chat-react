@@ -16,7 +16,7 @@ function LogInPage() {
   const onSubmit = async (data: LoginFormFields) => {
     const { jwt } = await trigger(data);
     saveToLocalStorage(JWT_KEY, jwt);
-    navigate("/");
+    navigate("/home");
   };
 
   return (
