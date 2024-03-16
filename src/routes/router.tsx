@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import createRouteGuard from "../helpers/createRouteGuard";
+import RouteGuard from "../components/RouteGuard";
 import ForgotPasswordPage from "./ForgotPasswordPage";
 import HomePage from "./HomePage";
 import LogInPage from "./LogInPage";
@@ -14,23 +14,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: createRouteGuard(LogInPage, "loggedOut"),
+        element: (
+          <RouteGuard condition="loggedOut">
+            <LogInPage />
+          </RouteGuard>
+        ),
       },
       {
         path: "/register",
-        element: createRouteGuard(RegisterPage, "loggedOut"),
+        element: (
+          <RouteGuard condition="loggedOut">
+            <RegisterPage />
+          </RouteGuard>
+        ),
       },
       {
         path: "/forgot-password",
-        element: createRouteGuard(ForgotPasswordPage, "loggedOut"),
+        element: (
+          <RouteGuard condition="loggedOut">
+            <ForgotPasswordPage />
+          </RouteGuard>
+        ),
       },
       {
         path: "/reset-password",
-        element: createRouteGuard(ResetPasswordPage, "loggedOut"),
+        element: (
+          <RouteGuard condition="loggedOut">
+            <ResetPasswordPage />
+          </RouteGuard>
+        ),
       },
       {
         path: "/home",
-        element: createRouteGuard(HomePage, "loggedIn"),
+        element: (
+          <RouteGuard condition="loggedIn">
+            <HomePage />
+          </RouteGuard>
+        ),
       },
     ],
   },
