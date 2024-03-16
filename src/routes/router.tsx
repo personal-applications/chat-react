@@ -5,27 +5,34 @@ import HomePage from "./HomePage";
 import LogInPage from "./LogInPage";
 import RegisterPage from "./RegisterPage";
 import ResetPasswordPage from "./ResetPasswordPage";
+import RootPage from "./RootPage";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: createRouteGuard(LogInPage, "loggedOut"),
-  },
-  {
-    path: "/register",
-    element: createRouteGuard(RegisterPage, "loggedOut"),
-  },
-  {
-    path: "/forgot-password",
-    element: createRouteGuard(ForgotPasswordPage, "loggedOut"),
-  },
-  {
-    path: "/reset-password",
-    element: createRouteGuard(ResetPasswordPage, "loggedOut"),
-  },
-  {
     path: "/",
-    element: createRouteGuard(HomePage, "loggedIn"),
+    element: <RootPage />,
+    children: [
+      {
+        path: "/login",
+        element: createRouteGuard(LogInPage, "loggedOut"),
+      },
+      {
+        path: "/register",
+        element: createRouteGuard(RegisterPage, "loggedOut"),
+      },
+      {
+        path: "/forgot-password",
+        element: createRouteGuard(ForgotPasswordPage, "loggedOut"),
+      },
+      {
+        path: "/reset-password",
+        element: createRouteGuard(ResetPasswordPage, "loggedOut"),
+      },
+      {
+        path: "/home",
+        element: createRouteGuard(HomePage, "loggedIn"),
+      },
+    ],
   },
 ]);
 
