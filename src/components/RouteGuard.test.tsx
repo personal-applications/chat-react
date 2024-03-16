@@ -1,17 +1,15 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Mock } from "vitest";
 import {
   JWT_KEY,
   deleteFromLocalStorage,
   saveToLocalStorage,
 } from "../helpers/localStorage";
 import RouteGuard, { RouteGuardCondition } from "./RouteGuard";
-import { Mock } from "vitest";
 
-vi.mock("react-router-dom", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("react-router-dom")>();
+vi.mock("react-router-dom", () => {
   return {
-    ...mod,
     useNavigate: vi.fn(),
   };
 });
@@ -22,11 +20,9 @@ const jwt = "mock-jwt";
 
 const renderWithRouter = (condition: RouteGuardCondition) =>
   render(
-    <MemoryRouter>
-      <RouteGuard condition={condition}>
-        <MockComponent />
-      </RouteGuard>
-    </MemoryRouter>,
+    <RouteGuard condition={condition}>
+      <MockComponent />
+    </RouteGuard>,
   );
 
 const navigateMock = vi.fn();
