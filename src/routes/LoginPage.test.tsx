@@ -4,6 +4,7 @@ import { BrowserRouter, useNavigate } from "react-router-dom";
 import useSWRMutation from "swr/mutation";
 import { Mock } from "vitest";
 import LogInPage from "./LogInPage";
+import { getFromLocalStorage } from "../helpers/localStorage";
 
 vi.mock("swr/mutation", () => {
   return {
@@ -54,6 +55,7 @@ suite("LogInPage", () => {
     );
     await userEvent.click(screen.getByText("Log in"));
 
+    expect(getFromLocalStorage("jwt")).toBe("dummyToken");
     expect(triggerMock).toHaveBeenCalledWith({
       email: "test@example.com",
       password: "Password123*",
