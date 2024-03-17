@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { useNavigate } from "react-router-dom";
-import { Mock } from "vitest";
+import { BrowserRouter } from "react-router-dom";
 import {
   JWT_KEY,
   deleteFromLocalStorage,
@@ -8,24 +7,18 @@ import {
 } from "../helpers/localStorage";
 import RouteGuard, { RouteGuardCondition } from "./RouteGuard";
 
-vi.mock("react-router-dom", () => {
-  return {
-    useNavigate: vi.fn(),
-  };
-});
-
 const MockComponent = () => <div>Mock Component</div>;
 
 const jwt = "mock-jwt";
 
 const renderWithRouter = (condition: RouteGuardCondition) =>
   render(
-    <RouteGuard condition={condition}>
-      <MockComponent />
-    </RouteGuard>,
+    <BrowserRouter>
+      <RouteGuard condition={condition}>
+        <MockComponent />
+      </RouteGuard>
+    </BrowserRouter>,
   );
-
-const navigateMock = vi.fn();
 
 beforeEach(() => {
   deleteFromLocalStorage(JWT_KEY);
@@ -41,11 +34,10 @@ test("renders children when condition is 'loggedIn' and JWT exists", () => {
 });
 
 test("redirects to '/login' when condition is 'loggedIn' and JWT does not exist", async () => {
-  (useNavigate as Mock).mockReturnValue(navigateMock);
   renderWithRouter("loggedIn");
 
   await waitFor(() => {
-    expect(navigateMock).toHaveBeenCalledWith("/login");
+    expect(window.location.pathname).toEqual("/login");
   });
 });
 
@@ -57,11 +49,10 @@ test("renders children when condition is 'loggedOut' and JWT does not exist", ()
 });
 
 test("redirects to '/home' when condition is 'loggedOut' and JWT exists", async () => {
-  (useNavigate as Mock).mockReturnValue(navigateMock);
   saveToLocalStorage(JWT_KEY, jwt);
   renderWithRouter("loggedOut");
 
   await waitFor(() => {
-    expect(navigateMock).toHaveBeenCalledWith("/home");
+    expect(window.location.pathname).toEqual("/home");
   });
 });
