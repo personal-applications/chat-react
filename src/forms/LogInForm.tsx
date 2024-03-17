@@ -66,6 +66,7 @@ export default function LogInForm({ onSubmit }: Prop) {
       noValidate
       onSubmit={handleSubmit(asyncOnSubmit)}
       className="mt-6 flex flex-col gap-y-6 rounded-md bg-base-100 p-8"
+      data-testid="login-form"
     >
       <If condition={!isSubmitting && !!errors.root}>
         <Then>
