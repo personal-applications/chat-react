@@ -5,7 +5,7 @@ import ResetPasswordForm, {
 import { postData } from "../services/fetcher";
 import { Link } from "react-router-dom";
 
-function ForgotPasswordPage() {
+function ResetPasswordPage() {
   const { trigger } = useSWRMutation<
     { message: string },
     Error,
@@ -40,4 +40,4 @@ function ForgotPasswordPage() {
   );
 }
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;
