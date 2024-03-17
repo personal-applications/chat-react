@@ -29,7 +29,7 @@ test("should trigger the reset password mutation on form submission", async () =
     </MemoryRouter>,
   );
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 

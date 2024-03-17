@@ -120,7 +120,7 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
       </If>
 
       <PasswordInput
-        placeholder="New Password"
+        placeholder="New password"
         error={errors.newPassword?.message}
         {...register("newPassword")}
       />
