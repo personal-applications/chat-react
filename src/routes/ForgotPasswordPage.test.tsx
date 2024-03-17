@@ -11,7 +11,7 @@ vi.mock("swr/mutation", () => {
   };
 });
 
-test("should render the forgot password form", () => {
+test("should render the forgot password page", () => {
   const tree = render(
     <BrowserRouter>
       <ForgotPasswordPage />
