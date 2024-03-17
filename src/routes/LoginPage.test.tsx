@@ -20,7 +20,7 @@ vi.mock("react-router-dom", async (importOriginal) => {
   };
 });
 
-test("should render the login form", () => {
+test("should render the login page", () => {
   const tree = render(
     <BrowserRouter>
       <LogInPage />
