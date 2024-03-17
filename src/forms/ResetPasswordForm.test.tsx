@@ -16,7 +16,7 @@ const renderForm = () => {
 test("renders form with password inputs and submit button", () => {
   renderForm();
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
@@ -28,7 +28,7 @@ test("renders form with password inputs and submit button", () => {
 test("displays error message when passwords do not match", async () => {
   renderForm();
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
@@ -48,7 +48,7 @@ test("displays error message when passwords do not match", async () => {
 test("calls onSubmit with form data when passwords match", async () => {
   renderForm();
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
@@ -71,7 +71,7 @@ test("displays success message when form submission is successful", async () => 
 
   renderForm();
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
@@ -91,7 +91,7 @@ test("displays error message when form submission fails", async () => {
 
   renderForm();
 
-  const passwordInput = screen.getByPlaceholderText("New Password");
+  const passwordInput = screen.getByPlaceholderText("New password");
   const confirmPasswordInput = screen.getByPlaceholderText("Confirm Password");
   const submitButton = screen.getByRole("button", { name: "Reset" });
 
