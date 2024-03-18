@@ -3,72 +3,50 @@ import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
 import { useForm } from "react-hook-form";
 import { If, Then } from "react-if";
-import { Link, useSearchParams } from "react-router-dom";
-import PasswordInput from "../components/PasswordInput";
-import { PASSWORD_REGEX } from "../constants";
-import { ServerError, isServerFromError } from "../services/error";
+import { Link } from "react-router-dom";
+import Input from "../Input";
 
-export type ResetPasswordFields = {
-  newPassword: string;
-  confirmPassword: string;
-  token?: string;
+export type ForgotPasswordFields = {
+  email: string;
 };
 
-const schema = {
+const schema: JSONSchemaType<ForgotPasswordFields> = {
   type: "object",
   properties: {
-    newPassword: { type: "string", pattern: PASSWORD_REGEX },
-    confirmPassword: { const: { $data: "1/newPassword" } },
-    token: { type: "string", nullable: true },
+    email: { type: "string", format: "email" },
   },
-  required: ["newPassword", "confirmPassword"],
+  required: ["email"],
   additionalProperties: false,
   errorMessage: {
     properties: {
-      newPassword:
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-      confirmPassword: "Passwords do not match.",
+      email: "Invalid email format.",
     },
   },
-} as unknown as JSONSchemaType<ResetPasswordFields>;
-
-export type Prop = {
-  onSubmit: (data: ResetPasswordFields) => Promise<{ message: string }>;
 };
 
-export default function ResetPasswordForm({ onSubmit }: Prop) {
-  const [searchParams] = useSearchParams();
+export type Prop = {
+  onSubmit: (data: ForgotPasswordFields) => Promise<{ message: string }>;
+};
+
+export default function ForgotPasswordForm({ onSubmit }: Prop) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<ResetPasswordFields>({
+  } = useForm<ForgotPasswordFields>({
     resolver: ajvResolver(schema, {
       formats: fullFormats,
-      $data: true,
     }),
     reValidateMode: "onChange",
   });
 
-  const asyncOnSubmit = async (data: ResetPasswordFields) => {
+  const asyncOnSubmit = async (data: ForgotPasswordFields) => {
     try {
-      data.token = searchParams.get("token") ?? undefined;
       const { message } = await onSubmit(data);
       setError("root.serverResponse", { message });
     } catch (error) {
-      if (isServerFromError(error)) {
-        const e = error as ServerError;
-        setError("root.serverError", {
-          message: e.message,
-        });
-
-        return;
-      }
-
-      setError("root.serverError", {
-        message: "An unknown error occurred.",
-      });
+      setError("root.serverError", { message: "An unknown error occurred." });
     }
   };
 
@@ -98,7 +76,7 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
           </div>
         </Then>
       </If>
-      <If condition={!!errors?.root?.serverError}>
+      <If condition={!isSubmitting && !!errors?.root?.serverError}>
         <Then>
           <div role="alert" className="alert alert-error">
             <svg
@@ -119,23 +97,19 @@ export default function ResetPasswordForm({ onSubmit }: Prop) {
         </Then>
       </If>
 
-      <PasswordInput
-        placeholder="New password"
-        error={errors.newPassword?.message}
-        {...register("newPassword")}
+      <Input
+        type="email"
+        placeholder="Email"
+        error={errors.email?.message}
+        {...register("email")}
       />
-
-      <PasswordInput
-        placeholder="Confirm Password"
-        error={errors.confirmPassword?.message}
-        {...register("confirmPassword")}
-      />
-
-      <Link to="/forgot-password" className="link link-primary link-hover">
-        Forgot password?
-      </Link>
+      <div className="ml-auto">
+        <Link to="/login" className="link link-primary link-hover">
+          Back to login
+        </Link>
+      </div>
       <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-        Reset
+        Forgot
       </button>
     </form>
   );

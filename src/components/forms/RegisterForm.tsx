@@ -3,10 +3,10 @@ import { JSONSchemaType } from "ajv";
 import { fullFormats } from "ajv-formats/dist/formats";
 import { useForm } from "react-hook-form";
 import { If, Then } from "react-if";
-import Input from "../components/Input";
-import PasswordInput from "../components/PasswordInput";
-import { PASSWORD_REGEX } from "../constants";
-import { ServerError, isServerFromError } from "../services/error";
+import Input from "../Input";
+import PasswordInput from "../PasswordInput";
+import { PASSWORD_REGEX } from "../../constants";
+import { ServerError, isServerFromError } from "../../services/error";
 
 export type RegisterFormFields = {
   email: string;

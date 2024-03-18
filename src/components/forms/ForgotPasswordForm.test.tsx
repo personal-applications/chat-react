@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
-import { ServerError } from "../services/error";
+import { ServerError } from "../../services/error";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const mockOnSubmit = vi.fn();
