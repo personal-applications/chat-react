@@ -1,4 +1,4 @@
-import React from "react";
+// icon:eye-invisible | Ant Design Icons https://ant.design/components/icon/ | Ant Design
 
 function IconEyeInvisible(props: React.SVGProps<SVGSVGElement>) {
   return (
