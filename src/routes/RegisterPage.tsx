@@ -1,5 +1,7 @@
 import useSWRMutation from "swr/mutation";
-import RegisterForm, { RegisterFormFields } from "../forms/RegisterForm";
+import RegisterForm, {
+  RegisterFormFields,
+} from "../components/forms/RegisterForm";
 import { postData } from "../services/fetcher";
 import { Link } from "react-router-dom";
 

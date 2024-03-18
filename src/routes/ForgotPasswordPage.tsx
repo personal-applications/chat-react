@@ -1,7 +1,7 @@
 import useSWRMutation from "swr/mutation";
 import ForgotPasswordForm, {
   ForgotPasswordFields,
-} from "../forms/ForgotPasswordForm";
+} from "../components/forms/ForgotPasswordForm";
 import { postData } from "../services/fetcher";
 
 function ForgotPasswordPage() {

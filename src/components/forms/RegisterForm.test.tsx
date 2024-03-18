@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ServerError } from "../services/error";
+import { ServerError } from "../../services/error";
 import RegisterForm, { RegisterFormFields } from "./RegisterForm";
 
 test("displays validation errors when fields are left empty", async () => {

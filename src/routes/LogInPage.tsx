@@ -1,5 +1,5 @@
 import useSWRMutation from "swr/mutation";
-import LogInForm, { LoginFormFields } from "../forms/LogInForm";
+import LogInForm, { LoginFormFields } from "../components/forms/LogInForm";
 import { postData } from "../services/fetcher";
 import { Link, useNavigate } from "react-router-dom";
 import { JWT_KEY, saveToLocalStorage } from "../helpers/localStorage";

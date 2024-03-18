@@ -1,7 +1,7 @@
 import useSWRMutation from "swr/mutation";
 import ResetPasswordForm, {
   ResetPasswordFields,
-} from "../forms/ResetPasswordForm";
+} from "../components/forms/ResetPasswordForm";
 import { postData } from "../services/fetcher";
 import { Link } from "react-router-dom";
 
