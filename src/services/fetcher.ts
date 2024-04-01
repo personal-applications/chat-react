@@ -31,10 +31,12 @@ export async function postData<Data, Key extends string, ExtraArgs>(
   { arg }: { arg: ExtraArgs },
 ): Promise<Data> {
   try {
+    const jwt = getFromLocalStorage(JWT_KEY);
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify(arg),
     });
