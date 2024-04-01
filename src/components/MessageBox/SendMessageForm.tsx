@@ -3,6 +3,7 @@ import Input from "../Input";
 import { useForm } from "react-hook-form";
 import { ajvResolver } from "@hookform/resolvers/ajv";
 import IconSend from "../icons/IconSend";
+import { Else, If, Then } from "react-if";
 
 export type SendMessageFields = {
   content: string;
@@ -32,15 +33,16 @@ type Prop = {
 export default function SendMessageForm({ onSubmit }: Prop) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
   } = useForm<SendMessageFields>({
     resolver: ajvResolver(schema),
   });
 
   const onSubmitAsync = async (data: SendMessageFields) => {
-    // Call the prop function
     await onSubmit(data);
+    reset();
   };
 
   return (
@@ -55,8 +57,16 @@ export default function SendMessageForm({ onSubmit }: Prop) {
         role="button"
         className="btn btn-primary"
         data-testid="submit-btn"
+        disabled={isSubmitting}
       >
-        <IconSend />
+        <If condition={isSubmitting}>
+          <Then>
+            <span className="loading loading-spinner loading-md"></span>
+          </Then>
+          <Else>
+            <IconSend />
+          </Else>
+        </If>
       </button>
     </form>
   );

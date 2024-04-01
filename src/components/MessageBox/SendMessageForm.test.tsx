@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import SendMessageForm, { SendMessageFields } from "./SendMessageForm";
+import SendMessageForm from "./SendMessageForm";
 
 test("should render the send message form", () => {
   render(<SendMessageForm onSubmit={vi.fn()} />);
